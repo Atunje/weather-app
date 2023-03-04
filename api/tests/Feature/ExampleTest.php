@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,9 +18,21 @@ class ExampleTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response()
     {
+        User::factory(20)->create();
+
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertOk()->assertJson(
+            fn (AssertableJson $json) => 
+                $json->has('users', 20)
+                     ->has('users.0', fn (AssertableJson $json) => 
+                        $json->hasAll(['id', 'name', 'email', 'email_verified_at', 'latitude', 'longitude', 'created_at', 'updated_at'])
+                            ->has('weather', fn (AssertableJson $json) => 
+                                $json->hasAll(['humidity', 'pressure', 'temperature', 'windSpeed', 'windDirection', 'forecast', 'forecastDescription', 'icon'])
+                                ->etc()
+                            )->etc()
+                        )->etc()
+        );
     }
 
     public function test_database_works()
