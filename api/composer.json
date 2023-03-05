@@ -15,11 +15,10 @@
         "laravel/pint": "^1.0",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
+        "nunomaduro/larastan": "^2.0",
+        "nunomaduro/phpinsights": "^2.7",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^2.0",
-        "friendsofphp/php-cs-fixer": "^3.11",
-        "nunomaduro/larastan": "^2.2",
-        "nunomaduro/phpinsights": "^2.6"
+        "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -58,7 +57,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "minimum-stability": "dev",

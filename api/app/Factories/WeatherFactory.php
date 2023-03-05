@@ -9,7 +9,7 @@ abstract class WeatherFactory
 {
     protected Weather $weather;
 
-    protected ?MeasurementUnit $units;
+    protected MeasurementUnit $units;
 
     public function __construct()
     {
@@ -44,7 +44,7 @@ abstract class WeatherFactory
         return $this;
     }
 
-    protected function setWindDirection(float $direction, string $unit = "°")
+    protected function setWindDirection(float $direction, string $unit)
     {
         $this->weather->windDirection = $direction . "" . $unit;
 
@@ -72,19 +72,19 @@ abstract class WeatherFactory
         return $this;
     }
 
-    protected function setPressure(string $pressure, string $unit = 'hPa')
+    protected function setPressure(string $pressure, string $unit)
     {
         $this->weather->pressure = $pressure . '' . $unit;
 
         return $this;
     }
 
-    private function setUnits(?MeasurementUnit $units): void
+    private function setUnits(MeasurementUnit $units): void
     {
         $this->units = $units;
     }
 
-    public function create(array $weatherInfo, ?MeasurementUnit $units = null): Weather
+    public function create(array $weatherInfo, MeasurementUnit $units): Weather
     {
         $this->setUnits($units);
 

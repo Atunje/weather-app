@@ -15,8 +15,8 @@ abstract class WeatherService
     /**
      * Age of cached weather info
      */
-    protected string $cacheAge;
-
+    protected int $cacheAge;
+ 
     /**
      * Collection $entities
      * 
@@ -46,8 +46,6 @@ abstract class WeatherService
      * updateEntities
      * 
      * update entities with weather information
-     * 
-     * @throws NullPointerException
      */
     public function updateEntities(Collection $entities): Collection
     {
@@ -70,7 +68,7 @@ abstract class WeatherService
         $weather = Cache::get($coordinate->toString(), null);
 
         if ($weather != null) {
-            $entity->weather = $weather;
+            $entity->setWeather($weather);
 
             return true;
         }
@@ -83,15 +81,17 @@ abstract class WeatherService
      * 
      * Create a weather instance 
      */
-    protected function createWeather(array $weatherInfo, HasCoordinates $entity, ?MeasurementUnit $units = null): Weather 
+    protected function setWeatherOnEntity(HasCoordinates $entity, array $weatherInfo, MeasurementUnit $units): void 
     {
         $coordinate = $entity->getCoordinate();
 
-        return Cache::remember($coordinate->toString(), $this->cacheAge, function () use ($weatherInfo, $units) {
+        $weather = Cache::remember($coordinate->toString(), $this->cacheAge, function () use ($weatherInfo, $units) {
             return $this->weatherFactory->create($weatherInfo, $units);
         });
-    }
 
+        $entity->setWeather($weather);
+    }
+    
     /**
      * setWeatherOnEntities
      * 

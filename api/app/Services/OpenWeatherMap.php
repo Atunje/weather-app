@@ -49,7 +49,7 @@ class OpenWeatherMap extends WeatherService
         return $promises;
     }
 
-    private function sendWeatherRequest(Coordinate $coordinate): \GuzzleHttp\Promise\Promise
+    private function sendWeatherRequest(Coordinate $coordinate): \GuzzleHttp\Promise\PromiseInterface
     {
         return $this->requestClient->getAsync($this->url, [
             "query" => [
@@ -69,11 +69,10 @@ class OpenWeatherMap extends WeatherService
             
             if(isset($responses[$entity_id])) {
                 $res = $responses[$entity_id]['value'];
-                $body = json_decode($res->getBody(), true);
+                $weatherInfo = json_decode($res->getBody(), true);
 
-                $entity->weather = $this->createWeather($body, $entity, $this->units);
+                $this->setWeatherOnEntity($entity, $weatherInfo, $this->units);
             }
         }
     }
 }
-

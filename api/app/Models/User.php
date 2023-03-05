@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\DTOs\Coordinate;
 use App\Interfaces\HasCoordinates;
+use App\DTOs\Weather;
 
 class User extends Authenticatable implements HasCoordinates
 {
@@ -42,6 +43,8 @@ class User extends Authenticatable implements HasCoordinates
         'email_verified_at' => 'datetime',
     ];
 
+    public Weather $weather;
+
     public function getCoordinate(): Coordinate 
     {
         return new Coordinate($this->longitude, $this->latitude);
@@ -50,5 +53,10 @@ class User extends Authenticatable implements HasCoordinates
     public function getUniqueId(): mixed 
     {
         return $this->id;
+    }
+
+    public function setWeather(Weather $weather): void 
+    {
+        $this->weather = $weather;
     }
 }

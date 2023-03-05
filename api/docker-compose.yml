@@ -1,10 +1,10 @@
-name: fullstack-challenge
+name: fullstack_challenge
 services:
     app:
         build:
             context: ./docker
         ports:
-            - "80:80"
+            - "8085:8085"
         volumes:
             - .:/var/www/html
 

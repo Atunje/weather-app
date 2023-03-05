@@ -13,10 +13,10 @@ class OpenWeatherMapFactory extends WeatherFactory
         $result = new Fluent($weatherInfo);
 
         $this->setHumidity($result->main['humidity'])
-            ->setPressure($result->main['pressure'])
+            ->setPressure($result->main['pressure'], 'hPa')
             ->setTemperature($result->main['temp'], $this->getTemperatureUnit())
             ->setWindSpeed($result->wind['speed'], $this->getWindSpeedUnit())
-            ->setWindDirection($result->wind['deg'])
+            ->setWindDirection($result->wind['deg'], "°")
             ->setForecast($result->weather[0]['main'])
             ->setForecastDescription($result->weather[0]['description'])
             ->setIcon($this->getIconUrl($result->weather[0]['icon']));
