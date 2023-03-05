@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\DTOs\Weather;
-use App\DTOs\Coordinate;
 use App\Enums\MeasurementUnit;
 use App\Factories\WeatherFactory;
 use App\Interfaces\HasCoordinates;
@@ -16,10 +14,10 @@ abstract class WeatherService
      * Age of cached weather info
      */
     protected int $cacheAge;
- 
+
     /**
      * Collection $entities
-     * 
+     *
      * Entities upon which weather info are to be added
      */
     protected Collection $entities;
@@ -34,7 +32,7 @@ abstract class WeatherService
 
     /**
      * setEntities
-     * 
+     *
      * Set the supplied entities in the instance
      */
     private function setEntities(Collection $entities): void
@@ -44,7 +42,7 @@ abstract class WeatherService
 
     /**
      * updateEntities
-     * 
+     *
      * update entities with weather information
      */
     public function updateEntities(Collection $entities): Collection
@@ -58,7 +56,7 @@ abstract class WeatherService
 
     /**
      * setWeatherIfAvailable
-     * 
+     *
      * Sets the entity weather if available in cache
      */
     protected function setWeatherIfAvailable(HasCoordinates $entity): bool
@@ -78,10 +76,10 @@ abstract class WeatherService
 
     /**
      * createWeather
-     * 
-     * Create a weather instance 
+     *
+     * Create a weather instance
      */
-    protected function setWeatherOnEntity(HasCoordinates $entity, array $weatherInfo, MeasurementUnit $units): void 
+    protected function setWeatherOnEntity(HasCoordinates $entity, array $weatherInfo, MeasurementUnit $units): void
     {
         $coordinate = $entity->getCoordinate();
 
@@ -91,11 +89,11 @@ abstract class WeatherService
 
         $entity->setWeather($weather);
     }
-    
+
     /**
      * setWeatherOnEntities
-     * 
+     *
      * Update individual entity with weather information
      */
-    protected abstract function setWeatherOnEntities(): void;
+    abstract protected function setWeatherOnEntities(): void;
 }

@@ -91,5 +91,5 @@ abstract class WeatherFactory
         return $this->init()->createWeather($weatherInfo);
     }
 
-    public abstract function createWeather(array $weatherInfo): Weather;
+    abstract public function createWeather(array $weatherInfo): Weather;
 }

@@ -5,9 +5,6 @@ namespace App\Http\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Services\WeatherService;
-use App\DTOs\Coordinate;
-use App\Vendors\OpenWeatherMap;
 
 /** @mixin User */
 class UserResource extends JsonResource
@@ -32,5 +29,3 @@ class UserResource extends JsonResource
         ];
     }
 }
-
-

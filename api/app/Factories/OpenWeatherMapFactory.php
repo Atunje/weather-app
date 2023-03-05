@@ -24,14 +24,14 @@ class OpenWeatherMapFactory extends WeatherFactory
         return $this->weather;
     }
 
-    private function getIconUrl(string $name): string 
+    private function getIconUrl(string $name): string
     {
         return "http://openweathermap.org/img/wn/" . $name . ".png";
     }
 
     private function getTemperatureUnit(): string
     {
-        return match($this->units) {
+        return match ($this->units) {
             MeasurementUnit::Standard => 'K',
             MeasurementUnit::Imperial => '°C',
             MeasurementUnit::Metric => '°F',
@@ -40,7 +40,7 @@ class OpenWeatherMapFactory extends WeatherFactory
 
     private function getWindSpeedUnit(): string
     {
-        return match($this->units) {
+        return match ($this->units) {
             MeasurementUnit::Standard, MeasurementUnit::Imperial => 'm/s',
             MeasurementUnit::Metric => 'mph',
         };

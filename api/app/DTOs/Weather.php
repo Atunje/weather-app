@@ -2,8 +2,8 @@
 
 namespace App\DTOs;
 
-class Weather {
-
+class Weather
+{
     public string $humidity;
 
     public string $pressure;

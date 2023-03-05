@@ -2,15 +2,12 @@
 
 namespace App\Services;
 
-use App\Services\WeatherService;
-use App\DTOs\Coordinate;
-use App\DTOs\Weather;
-use App\Factories\WeatherFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
+use App\DTOs\Coordinate;
 use App\Enums\MeasurementUnit;
+use App\Services\WeatherService;
+use App\Factories\WeatherFactory;
 
 class OpenWeatherMap extends WeatherService
 {
@@ -31,7 +28,7 @@ class OpenWeatherMap extends WeatherService
     {
         $promises = $this->sendRequests();
 
-        if(count($promises) > 0) {
+        if (count($promises) > 0) {
             $this->setWeatherFromResponses($promises);
         }
     }
@@ -64,10 +61,10 @@ class OpenWeatherMap extends WeatherService
     {
         $responses = Promise\Utils::settle($promises)->wait();
 
-        foreach($this->entities as $entity) {
+        foreach ($this->entities as $entity) {
             $entity_id = $entity->getUniqueId();
-            
-            if(isset($responses[$entity_id])) {
+
+            if (isset($responses[$entity_id])) {
                 $res = $responses[$entity_id]['value'];
                 $weatherInfo = json_decode($res->getBody(), true);
 

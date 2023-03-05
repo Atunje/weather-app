@@ -11,7 +11,8 @@ use App\DTOs\Weather;
 
 class User extends Authenticatable implements HasCoordinates
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -45,17 +46,17 @@ class User extends Authenticatable implements HasCoordinates
 
     public Weather $weather;
 
-    public function getCoordinate(): Coordinate 
+    public function getCoordinate(): Coordinate
     {
         return new Coordinate($this->longitude, $this->latitude);
     }
 
-    public function getUniqueId(): mixed 
+    public function getUniqueId(): mixed
     {
         return $this->id;
     }
 
-    public function setWeather(Weather $weather): void 
+    public function setWeather(Weather $weather): void
     {
         $this->weather = $weather;
     }

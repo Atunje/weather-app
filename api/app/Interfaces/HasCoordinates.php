@@ -4,9 +4,8 @@ namespace App\Interfaces;
 
 use App\DTOs\Weather;
 use App\DTOs\Coordinate;
-use Illuminate\Database\Eloquent\Collection;
 
-interface HasCoordinates 
+interface HasCoordinates
 {
     public function getCoordinate(): Coordinate;
 
