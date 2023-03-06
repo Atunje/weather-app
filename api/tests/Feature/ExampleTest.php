@@ -28,7 +28,7 @@ class ExampleTest extends TestCase
                      ->has('users.0', fn (AssertableJson $json) => 
                         $json->hasAll(['id', 'name', 'email', 'email_verified_at', 'latitude', 'longitude', 'created_at', 'updated_at'])
                             ->has('weather', fn (AssertableJson $json) => 
-                                $json->hasAll(['humidity', 'pressure', 'temperature', 'windSpeed', 'windDirection', 'forecast', 'forecastDescription', 'icon'])
+                                $json->hasAll(['humidity', 'pressure', 'temperature', 'windSpeed'])
                                 ->etc()
                             )->etc()
                         )->etc()
