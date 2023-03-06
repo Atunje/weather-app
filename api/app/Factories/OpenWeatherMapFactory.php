@@ -19,7 +19,7 @@ class OpenWeatherMapFactory extends WeatherFactory
         if (isset($result->wind['deg'])) $this->setWindDirection($result->wind['deg'], "°");
         if (isset($result->weather[0]['main'])) $this->setForecast($result->weather[0]['main']);
         if (isset($result->weather[0]['description'])) $this->setForecastDescription($result->weather[0]['description']);
-        if (isset($result->weather[0]['icon'])) $this->getIconUrl($result->weather[0]['icon']);
+        if (isset($result->weather[0]['icon'])) $this->setForecastDescription($this->getIconUrl($result->weather[0]['icon']));
 
         return $this->weather;
     }
