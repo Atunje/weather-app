@@ -44,7 +44,7 @@ class User extends Authenticatable implements HasCoordinates
         'email_verified_at' => 'datetime',
     ];
 
-    public Weather $weather;
+    private Weather $weather;
 
     public function getCoordinate(): Coordinate
     {
@@ -59,5 +59,10 @@ class User extends Authenticatable implements HasCoordinates
     public function setWeather(Weather $weather): void
     {
         $this->weather = $weather;
+    }
+
+    public function getWeather(): Weather
+    {
+        return $this->weather;
     }
 }

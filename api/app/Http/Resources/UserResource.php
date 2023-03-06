@@ -9,11 +9,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** @mixin User */
 class UserResource extends JsonResource
 {
-    public function __construct($resource)
-    {
-        parent::__construct($resource);
-    }
-
     public function toArray(Request $request): array
     {
         return [
@@ -25,7 +20,7 @@ class UserResource extends JsonResource
             "longitude" => $this->longitude,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
-            "weather" => $this->weather,
+            "weather" => $this->getWeather(),
         ];
     }
 }

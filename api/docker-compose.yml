@@ -1,15 +1,15 @@
-name: fullstack_challenge
 services:
     app:
         build:
             context: ./docker
         ports:
-            - "8085:8085"
+            - "8000:8000"
         volumes:
             - .:/var/www/html
 
     mysql:
         image: mysql:8
+        container_name: mysql
         ports:
             - "3306:3306"
         volumes:
@@ -20,6 +20,7 @@ services:
 
     redis:
         image: redis:7
+        container_name: redis
         ports:
             - "6379:6379"
         volumes:

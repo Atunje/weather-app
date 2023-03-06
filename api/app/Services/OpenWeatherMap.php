@@ -8,13 +8,13 @@ use App\DTOs\Coordinate;
 use App\Enums\MeasurementUnit;
 use App\Services\WeatherService;
 use App\Factories\WeatherFactory;
+use Symfony\Component\HttpFoundation\Response;
 
 class OpenWeatherMap extends WeatherService
 {
     private string $appId;
     private string $url;
     private Client $requestClient;
-    private MeasurementUnit $units = MeasurementUnit::Imperial;
 
     public function __construct(WeatherFactory $weatherFactory, Client $requestClient)
     {
@@ -26,38 +26,32 @@ class OpenWeatherMap extends WeatherService
 
     protected function setWeatherOnEntities(): void
     {
-        $promises = $this->sendRequests();
-
-        if (count($promises) > 0) {
-            $this->setWeatherFromResponses($promises);
-        }
-    }
-
-    private function sendRequests(): array
-    {
         $promises = [];
 
         foreach ($this->entities as $entity) {
-            if (! $this->setWeatherIfAvailable($entity)) {
-                $promises[$entity->getUniqueId()] = $this->sendWeatherRequest($entity->getCoordinate());
+            if (! $this->setWeatherOnEntityFromCache($entity)) {
+                $coordinate = $entity->getCoordinate();
+                $promises[$entity->getUniqueId()] = $this->requestClient->getAsync($this->url, $this->requestParams($coordinate));
             }
         }
 
-        return $promises;
+        if (count($promises) > 0) {
+            $this->setWeatherFromPromises($promises);
+        }
     }
 
-    private function sendWeatherRequest(Coordinate $coordinate): \GuzzleHttp\Promise\PromiseInterface
+    private function requestParams(Coordinate $coordinate): array
     {
-        return $this->requestClient->getAsync($this->url, [
+        return [
             "query" => [
                 'lat' => $coordinate->latitude,
                 'lon' => $coordinate->longitude,
                 'appid' => $this->appId,
-            ],
-        ]);
+            ]
+        ];
     }
 
-    private function setWeatherFromResponses(array $promises): void
+    private function setWeatherFromPromises(array $promises): void
     {
         $responses = Promise\Utils::settle($promises)->wait();
 
@@ -68,8 +62,20 @@ class OpenWeatherMap extends WeatherService
                 $res = $responses[$entity_id]['value'];
                 $weatherInfo = json_decode($res->getBody(), true);
 
-                $this->setWeatherOnEntity($entity, $weatherInfo, $this->units);
+                $this->setWeatherOnEntity($entity, $weatherInfo);
             }
+        }
+    }
+
+    public function updateWeatherInCache(Coordinate $coordinate): void
+    {
+        $res = $this->requestClient->request('GET', $this->url, $this->requestParams($coordinate));
+        
+        if ($res->getStatusCode() == Response::HTTP_OK) {
+            $weatherInfo = json_decode($res->getBody(), true);
+
+            $weather = $this->createWeather($weatherInfo);
+            $this->saveWeatherInCache($coordinate, $weather);
         }
     }
 }

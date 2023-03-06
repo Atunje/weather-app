@@ -11,6 +11,10 @@ RUN docker-php-ext-install \
     pdo_mysql \
     zip
 
+RUN pecl install -o -f redis \
+&&  rm -rf /tmp/pear \
+&&  docker-php-ext-enable redis
+
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
 RUN php -dopcache.enable_cli=1 -dopcache.jit_buffer_size=100M -dopcache.jit=tracing

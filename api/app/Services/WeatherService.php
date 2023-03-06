@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\DTOs\Weather;
+use App\DTOs\Coordinate;
+use App\Jobs\UpdateWeatherJob;
 use App\Enums\MeasurementUnit;
 use App\Factories\WeatherFactory;
 use App\Interfaces\HasCoordinates;
@@ -21,6 +24,11 @@ abstract class WeatherService
      * Entities upon which weather info are to be added
      */
     protected Collection $entities;
+
+    /**
+     * Units of measurement
+     */
+    protected MeasurementUnit $units = MeasurementUnit::Imperial;
 
     /**
      * Constructor
@@ -55,21 +63,23 @@ abstract class WeatherService
     }
 
     /**
-     * setWeatherIfAvailable
+     * setWeatherOnEntityFromCache
      *
      * Sets the entity weather if available in cache
      */
-    protected function setWeatherIfAvailable(HasCoordinates $entity): bool
+    protected function setWeatherOnEntityFromCache(HasCoordinates $entity): bool
     {
         $coordinate = $entity->getCoordinate();
-
         $weather = Cache::get($coordinate->toString(), null);
 
         if ($weather != null) {
             $entity->setWeather($weather);
+            
+            //update the weather in the cache
+            UpdateWeatherJob::dispatch($coordinate);
 
             return true;
-        }
+        } 
 
         return false;
     }
@@ -79,15 +89,27 @@ abstract class WeatherService
      *
      * Create a weather instance
      */
-    protected function setWeatherOnEntity(HasCoordinates $entity, array $weatherInfo, MeasurementUnit $units): void
+    protected function setWeatherOnEntity(HasCoordinates $entity, array $weatherInfo): void
     {
-        $coordinate = $entity->getCoordinate();
-
-        $weather = Cache::remember($coordinate->toString(), $this->cacheAge, function () use ($weatherInfo, $units) {
-            return $this->weatherFactory->create($weatherInfo, $units);
-        });
-
+        $weather = $this->createWeather($weatherInfo);
         $entity->setWeather($weather);
+
+        $this->saveWeatherInCache($entity->getCoordinate(), $weather);
+    }
+
+    /**
+     * createWeather
+     * 
+     * Use the WeatherFactory instance to create weather
+     */
+    protected function createWeather(array $weatherInfo): Weather
+    {
+        return $this->weatherFactory->create($weatherInfo, $this->units);
+    }
+
+    protected function saveWeatherInCache(Coordinate $coordinate, Weather $weather): void
+    {
+        Cache::put($coordinate->toString(), $weather, $this->cacheAge);
     }
 
     /**
@@ -96,4 +118,11 @@ abstract class WeatherService
      * Update individual entity with weather information
      */
     abstract protected function setWeatherOnEntities(): void;
+
+    /**
+     * updateWeatherInCache
+     * 
+     * request for weather and update the cache
+     */
+    abstract public function updateWeatherInCache(Coordinate $coordinate): void;
 }
