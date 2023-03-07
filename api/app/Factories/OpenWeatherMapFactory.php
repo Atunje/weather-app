@@ -20,7 +20,7 @@ class OpenWeatherMapFactory extends WeatherFactory
                 ->setWindSpeed(Arr::get($weatherInfo, 'wind.speed'), $this->getWindSpeedUnit())
                 ->setWindDirection(Arr::get($weatherInfo, 'wind.deg'), "°")
                 ->setForecast(Arr::get($weatherInfo, 'weather.0.main'))
-                ->setForecastDescription(Arr::get($weatherInfo, 'weather.0.descriptiond'))
+                ->setForecastDescription(Arr::get($weatherInfo, 'weather.0.description'))
                 ->setIcon($this->getIconUrl(Arr::get($weatherInfo, 'weather.0.icon')));
         } catch(\Throwable $e) {
             report("Error extracting data from weather api response");
