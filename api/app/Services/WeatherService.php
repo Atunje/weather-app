@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use App\DTOs\Weather;
 use App\DTOs\Coordinate;
 use App\Jobs\UpdateWeatherJob;
@@ -76,7 +77,7 @@ abstract class WeatherService
             $entity->setWeather($weather);
             
             //update the weather in the cache
-            //UpdateWeatherJob::dispatch($coordinate);
+            UpdateWeatherJob::dispatch($coordinate);
 
             return true;
         } 
@@ -109,7 +110,8 @@ abstract class WeatherService
 
     protected function saveWeatherInCache(Coordinate $coordinate, Weather $weather): void
     {
-        Cache::put($coordinate->toString(), $weather, $this->cacheAge);
+        $expire = Carbon::now()->addMinutes($this->cacheAge);
+        Cache::put($coordinate->toString(), $weather, $expire);
     }
 
     /**
