@@ -5,6 +5,7 @@ namespace App\Factories;
 use App\DTOs\Weather;
 use App\Enums\MeasurementUnit;
 use Illuminate\Support\Fluent;
+use App\Http\Resources\OpenWeatherMapResource;
 
 class OpenWeatherMapFactory extends WeatherFactory
 {
@@ -19,7 +20,7 @@ class OpenWeatherMapFactory extends WeatherFactory
         if (isset($result->wind['deg'])) $this->setWindDirection($result->wind['deg'], "°");
         if (isset($result->weather[0]['main'])) $this->setForecast($result->weather[0]['main']);
         if (isset($result->weather[0]['description'])) $this->setForecastDescription($result->weather[0]['description']);
-        if (isset($result->weather[0]['icon'])) $this->getIconUrl($result->weather[0]['icon']);
+        if (isset($result->weather[0]['icon'])) $this->setIcon($this->getIconUrl($result->weather[0]['icon']));
 
         return $this->weather;
     }

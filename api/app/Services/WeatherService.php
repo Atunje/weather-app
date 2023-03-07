@@ -76,7 +76,7 @@ abstract class WeatherService
             $entity->setWeather($weather);
             
             //update the weather in the cache
-            UpdateWeatherJob::dispatch($coordinate);
+            //UpdateWeatherJob::dispatch($coordinate);
 
             return true;
         } 

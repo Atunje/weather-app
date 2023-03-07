@@ -23,14 +23,15 @@ class UserService
 
     private function getAll(): Collection
     {
-        $users = Cache::get('users', null);
+        $users = Cache::get('all_users', null);
 
-        if ($users === null) {
-            $expire = Carbon::now()->addMinutes(10);
+        if ($users == null) {
+            $users = User::all();
 
-            $users = Cache::remember('users', $expire, function () {
-                return User::all();
-            });
+            if($users->count() > 0) {
+                $expire = Carbon::now()->addMinutes(5);
+                Cache::put('all_users', $users, $expire);
+            }
         }
 
         return $users;

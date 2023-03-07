@@ -3,15 +3,14 @@ services:
         build:
             context: ./docker
         ports:
-            - "8000:8000"
+            - "81:80"
         volumes:
             - .:/var/www/html
 
     mysql:
         image: mysql:8
-        container_name: mysql
         ports:
-            - "3306:3306"
+            - "3302:3306"
         volumes:
             - mysql_data:/var/lib/mysql
             - ./docker:/docker-entrypoint-initdb.d
@@ -20,9 +19,8 @@ services:
 
     redis:
         image: redis:7
-        container_name: redis
         ports:
-            - "6379:6379"
+            - "6370:6379"
         volumes:
             - redis_data:/data
 
