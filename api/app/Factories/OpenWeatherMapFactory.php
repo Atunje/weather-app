@@ -3,24 +3,29 @@
 namespace App\Factories;
 
 use App\DTOs\Weather;
+use Illuminate\Support\Arr;
 use App\Enums\MeasurementUnit;
 use Illuminate\Support\Fluent;
+use App\Exceptions\WeatherAPIException;
 use App\Http\Resources\OpenWeatherMapResource;
 
 class OpenWeatherMapFactory extends WeatherFactory
 {
     public function createWeather(array $weatherInfo): Weather
     {
-        $result = new Fluent($weatherInfo);
-
-        if (isset($result->main['humidity'])) $this->setHumidity($result->main['humidity']);
-        if (isset($result->main['pressure'])) $this->setPressure($result->main['pressure'], 'hPa');
-        if (isset($result->main['temp'])) $this->setTemperature($result->main['temp'], $this->getTemperatureUnit());
-        if (isset($result->wind['speed'])) $this->setWindSpeed($result->wind['speed'], $this->getWindSpeedUnit());
-        if (isset($result->wind['deg'])) $this->setWindDirection($result->wind['deg'], "°");
-        if (isset($result->weather[0]['main'])) $this->setForecast($result->weather[0]['main']);
-        if (isset($result->weather[0]['description'])) $this->setForecastDescription($result->weather[0]['description']);
-        if (isset($result->weather[0]['icon'])) $this->setIcon($this->getIconUrl($result->weather[0]['icon']));
+        try {
+            $this->setHumidity(Arr::get($weatherInfo, 'main.humidity'))
+                ->setPressure(Arr::get($weatherInfo, 'main.pressure'), 'hPa')
+                ->setTemperature(Arr::get($weatherInfo, 'main.temp'), $this->getTemperatureUnit())
+                ->setWindSpeed(Arr::get($weatherInfo, 'wind.speed'), $this->getWindSpeedUnit())
+                ->setWindDirection(Arr::get($weatherInfo, 'wind.deg'), "°")
+                ->setForecast(Arr::get($weatherInfo, 'weather.0.main'))
+                ->setForecastDescription(Arr::get($weatherInfo, 'weather.0.descriptiond'))
+                ->setIcon($this->getIconUrl(Arr::get($weatherInfo, 'weather.0.icon')));
+        } catch(\Throwable $e) {
+            report("Error extracting data from weather api response");
+            return new Weather();
+        }
 
         return $this->weather;
     }
