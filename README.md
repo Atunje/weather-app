@@ -20,3 +20,13 @@
 - Install javascript dependencies: `npm install`
 - Run frontend: `npm run dev`
 - Visit frontend: `http://localhost:5173`
+
+
+## PHP Stan Analysis
+
+<img width="712" alt="Screenshot 2023-03-07 at 12 13 07" src="https://user-images.githubusercontent.com/12198695/223409970-82d9c9d5-ca03-4694-ae84-b1bf86df7929.png">
+
+
+## PHP Insights Analysis
+
+<img width="542" alt="Screenshot 2023-03-07 at 12 24 39" src="https://user-images.githubusercontent.com/12198695/223410057-aa446a93-17da-4bb1-9010-f39660319b81.png">
